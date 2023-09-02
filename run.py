@@ -40,7 +40,7 @@ times = 0
 region = ['nose','leftcheek','rightcheek']
 score = 'No data' #Score of predict segment
 result = 'No data' #Fake or Real value
-final = []
+score = []
 win = 50 #Size of window
 #####################################################################################
 # FFT
@@ -169,12 +169,12 @@ if __name__ == "__main__":
 
     mean_score = np.mean(score) #mean of segments' score
     mean_score = np.int8(np.round(mean_score,0))
-    num1 = np.count_nonzero(final) #A number segment which is predicted as Fake
-    num0 = final.shape[0] - num1 #A number segment which is predicted as Real
+    num1 = np.count_nonzero(score) #A number segment which is predicted as Fake
+    num0 = score.shape[0] - num1 #A number segment which is predicted as Real
     print(mean_score.T)
 
     times = 0
-    final,BVP, FFT = [],[],[]
+    score,BVP, FFT = [],[],[]
     frames = [[], [], []]
     app = []
     score = 'No data'
