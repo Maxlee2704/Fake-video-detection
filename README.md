@@ -1,4 +1,5 @@
 # Fake video detection
+Using Remote Photoplethysmography signal, LSTM, and CNN for predict video.
 ## Fake video:
 This project processes videos which is created by Thins-plate motion model, MyHeritage, Revive, TalkingPhoto,etc. These video convert optical motion from the driving video into the target image. You can see a sample of this type of fake video below:
 ![Samplevideo](https://github.com/Maxlee2704/Fake-video-detection/blob/main/image%20and%20video/Sample.gif)
