@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
                 BVP,FFT = [], []
             cv2.putText(framex, str(segment_score), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-            cv2.putText(framex, result, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            cv2.putText(framex, segment_label, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
         cv2.imshow('Video',framex)
 
@@ -177,8 +177,8 @@ if __name__ == "__main__":
     score,BVP, FFT = [],[],[]
     frames = [[], [], []]
     app = []
-    score = 'No data'
-    result = 'No data'
+    segment_score = 'No data'
+    segment_label = 'No data'
     
     if num1 > num0:
         video_label = "Fake"
