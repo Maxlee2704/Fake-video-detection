@@ -10,7 +10,7 @@ Link download dataset: https://drive.google.com/drive/folders/1HPIymlKiuP5mDGTZ6
 Divide video into n segment. Each segment will be predicted by LSTM model. Average score will be used to classify fake or real video.
 ### Predict segment
 To extract Remote Photoplethysmography, this project use Local Group Invariance (doi: 10.1109/CVPRW.2018.00172.). After that, rPPG is converted into frequency domain by using Fourier Transform. Both temporial and frequency domain signal is fed into LSTM model. Faces is also used for CNN model to predict appearance. Output of CNN and LSTM is concatenated into vector for fully connected layer.
-![Model](model.png)
+![model_new](image and video/model_new.png)
 Structure of file
 - filter: include methods for rPPG signal extraction (such as: CHROM, POS, LGI)
 - model: include SVM model and LSTM model
