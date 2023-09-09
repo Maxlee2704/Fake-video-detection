@@ -1,10 +1,10 @@
-#from metric import *
+import matplotlib.pyplot as plt
 import numpy as np
 from keras.models import load_model
 from scipy import fft
-from filter.LGI import *
-from filter.POS_WANG import *
-from data.ROI import *
+from method.LGI import *
+from method.POS_WANG import *
+from ROI_extract.ROI import *
 import time
 import dlib
 import cv2
@@ -21,7 +21,7 @@ from sklearn.utils import shuffle
 import numpy as np
 #####################################################################################
 #Load model
-model = load_model('./model.h5)
+model = load_model(r'D:\BKU\Monhoc\223_Final\Final_version\model\exp\model.h5')
 #model.summary()
 #####################################################################################
 #Load face detection model
@@ -33,15 +33,15 @@ landmark_detector = dlib.shape_predictor("./ROI_extract/shape_predictor_68_face_
 #Init variable
 count,BVP_idx =0, 0 #Count frame and BVP
 app = [] #Contain frames of face
-frames = [[],[],[]] #Contain frames of ROI 
+frames = [[],[],[]] #Contain frames of ROI
 BVP = [] #Contain rPPG
 data = []
 times = 0
 region = ['nose','leftcheek','rightcheek']
-score = 'No data' #Score of predict segment
-result = 'No data' #Fake or Real value
+segment_score = 'No data' #Score of predict segment
+segment_label = 'No data' #Fake or Real value
 score = []
-win = 50 #Size of window
+win = 30 #Size of window
 #####################################################################################
 # FFT
 def fourier(signal,fs):
@@ -66,8 +66,8 @@ def filter(s,freq):
     return temp
 #####################################################################################
 if __name__ == "__main__":
-    PATH_VD = './video.mp4'
-    print("Processing: " + PATH_VD)
+    PATH_VD = r'D:\BKU\Monhoc\223_Final\video_demo\Real.mp4'
+    print("Processing: " + str(PATH_VD))
 
     #Information of video
     cap = cv2.VideoCapture(PATH_VD)
@@ -102,9 +102,6 @@ if __name__ == "__main__":
             frame_temp = cv2.cvtColor(frame[yf:yf + hf, xf:xf + wf, :],cv2.COLOR_BGR2GRAY)
             app.append(cv2.resize(frame_temp, (100, 100), interpolation=cv2.INTER_LINEAR))
 
-            cv2.imshow('Video', framex)
-            cv2.putText(framex, str(score), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
             if len(frames[0]) %150 ==0:
                 if times ==0:
                     SR = 0 #Start of window
@@ -119,7 +116,7 @@ if __name__ == "__main__":
                     BVP.append(LGI(frames[stt]))
 
                 BVP = np.array(BVP)
-                BVP = filter(BVP, fs)
+                #BVP = filter(BVP, fs)
                 app = np.array(app)
                 FFT = fourier(BVP,fs)
 
@@ -137,12 +134,12 @@ if __name__ == "__main__":
                 segment_score = model.predict(input, verbose=0)
                 segment_score = np.round(segment_score[2][0],2)
                 score.append(segment_score)
-                if segment_score >0.5:
+                if segment_score >= 0.5:
                     segment_label = 'Fake'
-                    print('Frame from ' + str(range_test) + ': ' + str(score[0]) + ' -> ' + '\033[91m' +segment_label + '\033[0m')
+                    print('Frame from ' + str(range_test) + ': ' + str(segment_score[0]) + ' -> ' + '\033[91m' +segment_label + '\033[0m')
                 else:
                     segment_label = 'Real'
-                    print('Frame from ' + str(range_test) + ': ' + str(score[0]) + ' -> ' + '\033[92m' +segment_label + '\033[0m')
+                    print('Frame from ' + str(range_test) + ': ' + str(segment_score[0]) + ' -> ' + '\033[92m' +segment_label + '\033[0m')
                 data.append(score)
 
                 #Using window
@@ -150,15 +147,19 @@ if __name__ == "__main__":
                 frame_win = [[], [], []]
                 for i in range(3):
                     frame_win[i] = frames[i][win:]
-
                 app = app[win:,:,:]
                 app = app.tolist()
                 frames = frame_win
 
                 BVP,FFT = [], []
-            cv2.putText(framex, str(segment_score), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-            cv2.putText(framex, segment_label, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
+            if segment_label == 'Fake':
+                color = (0,0,255)
+            elif segment_label == 'Real':
+                color = (0,255,0)
+            elif segment_label == 'No data':
+                color = (255,0,0)
+            cv2.putText(framex, str(segment_score), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            cv2.putText(framex, segment_label, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
         cv2.imshow('Video',framex)
 
         if (count==total_frames-3) or (cv2.waitKey(1) & 0xFF == ord('q')):
@@ -168,10 +169,13 @@ if __name__ == "__main__":
     cv2.destroyAllWindows()
 
     mean_score = np.mean(score) #mean of segments' score
-    mean_score = np.int8(np.round(mean_score,0))
+    mean_score = np.round(mean_score,2)
+    score = np.int8(np.round(score, 0))
     num1 = np.count_nonzero(score) #A number segment which is predicted as Fake
     num0 = score.shape[0] - num1 #A number segment which is predicted as Real
-    print(mean_score.T)
+    print("A number of Real segment: ",num0)
+    print("A number of Fake segment: ",num1)
+    print("Mean score of all segment: ",mean_score)
 
     times = 0
     score,BVP, FFT = [],[],[]
@@ -185,7 +189,7 @@ if __name__ == "__main__":
     elif num0 > num1:
         video_label = "Real"
     elif num0 == num1:
-        if pre > 0.5:
+        if mean_score >= 0.5:
             video_label = "Fake"
         else:
             video_label = "Real"
