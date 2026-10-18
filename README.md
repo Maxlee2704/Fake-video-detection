@@ -4,8 +4,7 @@ Using Remote Photoplethysmography signal, LSTM, and CNN for predict video.
 This project processes videos which is created by Thins-plate motion model, MyHeritage, Revive, TalkingPhoto,etc. These video convert optical motion from the driving video into the target image. You can see a sample of this type of fake video below:
 ![Samplevideo](https://github.com/Maxlee2704/Fake-video-detection/blob/main/image%20and%20video/Sample.gif)
 ## Dataset:
-Dataset for training is created by Thins-plate motion model (https://github.com/yoyo-nb/Thin-Plate-Spline-Motion-Model)
-Link download dataset: https://drive.google.com/drive/folders/1HPIymlKiuP5mDGTZ6sn6tn7Yk61qbgDe?usp=sharing
+Dataset for training is created by the Thin-Plate Spline Motion Model [1]
 ## Model architechture:
 ### Predict video
 Divide video into n segment. Each segment will be predicted by LSTM model. Average score will be used to classify fake or real video.
@@ -20,3 +19,5 @@ To extract Remote Photoplethysmography, this project use Local Group Invariance 
 - model: training model
 - report: detailed report in Vietnamese and brief summary in English
 - run.py: predict a video
+## References:
+[1] Z. Zhao and H. Zhang, “Thin-Plate Spline Motion Model for Image Animation,” arXiv preprint arXiv:2203.14367, 2022, doi: 10.48550/arXiv.2203.14367.
