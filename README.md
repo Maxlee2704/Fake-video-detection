@@ -21,4 +21,5 @@ To extract Remote Photoplethysmography, this project use Local Group Invariance 
 - run.py: predict a video
 ## References:
 [1] Z. Zhao and H. Zhang, “Thin-Plate Spline Motion Model for Image Animation,” arXiv preprint arXiv:2203.14367, 2022, doi: 10.48550/arXiv.2203.14367.
+
 [2] C. S. Pilz, S. Zaunseder, J. Krajewski and V. Blazek, "Local Group Invariance for Heart Rate Estimation from Face Videos in the Wild," 2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW), Salt Lake City, UT, USA, 2018, pp. 1335-13358, doi: 10.1109/CVPRW.2018.00172.
