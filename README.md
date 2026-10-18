@@ -1,20 +1,21 @@
 # Fake video detection
-Using Remote Photoplethysmography signal, LSTM, and CNN for predict video.
+This study proposed a DeepFake video detection based on biological signals extracted from videos, with the assumption that DeepFakes cannot mimic biological features (e.g., heart rate).
+Specifically, we use the Remote Photoplethysmography signal, which is featured for heart rate variability. Extracted signals are combined with LSTM and CNN to predict video.
 ## Fake video:
-This project processes videos which is created by Thins-plate motion model, MyHeritage, Revive, TalkingPhoto,etc. These video convert optical motion from the driving video into the target image. You can see a sample of this type of fake video below:
+This project processes videos that are created by the Thins-plate motion model, MyHeritage, Revive, TalkingPhoto, etc. These videos convert optical motion from the driving video into the target image. You can see a sample of this type of fake video below:
 ![Samplevideo](https://github.com/Maxlee2704/Fake-video-detection/blob/main/image%20and%20video/Sample.gif)
 ## Dataset:
-Dataset for training is created by the Thin-Plate Spline Motion Model [1]
-## Model architechture:
+The dataset for training is created by the Thin-Plate Spline Motion Model [1]
+## Model architecture:
 ### Predict video
-Divide video into n segment. Each segment will be predicted by LSTM model. Average score will be used to classify fake or real video.
+Divide the video into n segments. Each segment will be predicted by LSTM model. The average score is used to classify the video as fake or real.
 ### Predict segment
-To extract Remote Photoplethysmography, this project use Local Group Invariance [2]. After that, rPPG is converted into frequency domain by using Fourier Transform. Both temporial and frequency domain signal is fed into LSTM model. Faces is also used for CNN model to predict appearance. Output of CNN and LSTM is concatenated into vector for fully connected layer.
+To extract Remote Photoplethysmography, this project uses Local Group Invariance [2]. After that, rPPG is converted into the frequency domain using Fourier Transform. Both the temporal and frequency domain signals are fed into an LSTM model. Faces are also used for a CNN model to predict appearance. The output of the CNN and LSTM is concatenated into a vector for the fully connected layer.
 ![model](https://github.com/Maxlee2704/Fake-video-detection/blob/main/image%20and%20video/model_new.png)
-## Structure of file:
+## Structure of the file:
 - ROI_extract: extract ROI and face detection
 - data: include dataset
-- image and video: include sample of video, image
+- image and video: include samples of videos and images
 - method: include methods for rPPG signal extraction (such as: CHROM, POS, LGI)
 - model: training model
 - report: detailed report in Vietnamese and brief summary in English
